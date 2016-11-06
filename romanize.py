@@ -10,42 +10,45 @@ import sys
 # quotation marks) is prioritized oer conformance to standards.
 
 ru_dict = {
-  u'А': u'A',
-  u'Б': u'B',
-  u'В': u'V',
-  u'Г': u'G',
-  u'Д': u'D',
-  u'Е': u'Je',
-  u'Ё': u'Jo',
-  u'Ж': u'Zh',
-  u'З': u'Z',
-  u'И': u'I',
-  u'Й': u'Jj',
-  u'К': u'K',
-  u'Л': u'L',
-  u'М': u'M',
-  u'Н': u'N',
-  u'О': u'O',
-  u'П': u'P',
-  u'Р': u'R',
-  u'С': u'S',
-  u'Т': u'T',
-  u'У': u'U',
-  u'Ф': u'F',
-  u'Х': u'X',
-  u'Ц': u'C',
-  u'Ч': u'Ch',
-  u'Ш': u'Sh',
-  u'Щ': u'Shh',
-  u'Ъ': u'Jy',
-  u'Ы': u'Y',
-  u'Ь': u'Ji',
-  u'Э': u'E',
-  u' ' : '_',
+  'А': 'A',
+  'Б': 'B',
+  'В': 'V',
+  'Г': 'G',
+  'Д': 'D',
+  'Е': 'Je',
+  'Ё': 'Jo',
+  'Ж': 'Zh',
+  'З': 'Z',
+  'И': 'I',
+  'Й': 'Jj',
+  'К': 'K',
+  'Л': 'L',
+  'М': 'M',
+  'Н': 'N',
+  'О': 'O',
+  'П': 'P',
+  'Р': 'R',
+  'С': 'S',
+  'Т': 'T',
+  'У': 'U',
+  'Ф': 'F',
+  'Х': 'X',
+  'Ц': 'C',
+  'Ч': 'Ch',
+  'Ш': 'Sh',
+  'Щ': 'Shh',
+  'Ъ': 'Jy',
+  'Ы': 'Y',
+  'Ь': 'Ji',
+  'Э': 'E',
+  'Ю': 'Ju',
+  'Я': 'Ja',
 }
 
 def cyr2lat(s):
-  return ''.join(ru_dict[c] if ord(c) < 1072 else ru_dict[c.upper()].lower()
+  return ''.join(ru_dict[c] if 1039 < ord(c) <= 1071 else
+                 ru_dict[c.upper()].lower() if 1071 < ord(c) < 1104 else
+                 c
                  for c in s)
 
 def main():
@@ -54,9 +57,15 @@ def main():
   args = parser.parse_args()
 
   cwd = os.getcwd()
+  name = args.name
+  # Remove spaces.
+  name = name.replace(' ', '_')
+
+  name = cyr2lat(name)
+
   if os.path.exists(os.path.join(cwd, args.name)):
     os.rename(os.path.join(cwd, args.name),
-              os.path.join(cwd, cyr2lat(args.name)))
+              os.path.join(cwd, name))
 
 if __name__ == '__main__':
   main()
